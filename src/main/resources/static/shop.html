@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>校园二手平台</title>
+</head>
+<link rel="stylesheet" href="css/shop.css">
+<link rel="stylesheet" href="plugins/elementui/index.css">
+<link rel="stylesheet" href="plugins/font-awesome/css/font-awesome.min.css">
+<body>
+<div id="app">
+    <!--导航栏-->
+    <nav class="navbar navbar-expand-lg bg-body-secondary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" _msttexthash="8725119" _msthash="340">校园二手商品交易平台</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03"
+                    aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation" _msthidden="A"
+                    _mstaria-label="320099" _msthash="341">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarColor03">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#" _msttexthash="2136498"
+                           _msthash="342">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html" _msttexthash="5209451" _msthash="343">购物车</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="info.html" _msttexthash="4236310" _msthash="344">个人主页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="publish.html">发布闲置</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            商品分类
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" @click="classify('书籍')">书籍</a></li>
+                            <li><a class="dropdown-item" href="#" @click="classify('食品')">食品</a></li>
+                            <li><a class="dropdown-item" href="#" @click="classify('日用品')">日用品</a></li>
+                            <li><a class="dropdown-item" href="#" @click="classify('电子产品')">电子产品</a></li>
+                            <li><a class="dropdown-item" href="#" @click="classify('交通工具')">交通工具</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="搜索" aria-label="搜索"
+                           _mstplaceholder="74607" _msthash="346" _mstaria-label="74607" id="find_input" v-model="findInput">
+                    <button class="btn btn-outline-primary" type="button" _msttexthash="5663684" _msthash="347" @click="findGoods()">
+                        搜索
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!--轮播图-->
+    <div class="layui-carousel" id="rotation">
+        <div carousel-item>
+            <div><img src="img/rotation1.png" width="1600px" height="480px"/></div>
+            <div><img src="img/rotation2.jpg" width="1600px" height="480px"/></div>
+            <div><img src="img/rotation3.png" width="1600px" height="480px"/></div>
+        </div>
+    </div>
+
+    <blockquote class="layui-elem-quote layui-quote-nm">商品列表</blockquote>
+
+    <div class="good-list">
+        <div class="good-box" v-for="g in goods" :key="g.id">
+            <div class="good-img"><img :src="g.url" alt=""></div>
+            <div class="good-desc">
+                <div class="good-name">{{g.goodName}}</div>
+                <div class="good-price">￥{{g.price}}</div>
+            </div>
+            <div class="good-foot">
+                <div class="good-user-icon"><img :src="g.icon" alt=""></div>
+                <div class="good-user-name">{{g.name}}</div>
+                <a class="good-detail" :href="'/good.html?id='+g.id">详情</a>
+            </div>
+        </div>
+    </div>
+
+    <!--    分页工具条-->
+    <div class="block">
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="pagination.currentPage"
+                :page-size="pagination.pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="pagination.total">
+        </el-pagination>
+    </div>
+</div>
+
+</body>
+<!-- 引入组件库 -->
+<script src="js/vue.js" rel="script" type="text/javascript"></script>
+
+<script src="plugins/elementui/index.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+
+<script src="js/axios-0.18.0.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="layer/layer.js"></script>
+<!-- common.js -->
+<script type="text/javascript" src="js/common.js"></script>
+<!-- jquery-validator -->
+<script type="text/javascript" src="jquery-validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="jquery-validation/localization/messages_zh.min.js"></script>
+<!-- bootstrap -->
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css"/>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.bundle.js"></script>
+<!-- layui-->
+<link rel="stylesheet" href="layui/css/layui.css">
+<link rel="stylesheet" href="layui/css/new.css">
+<script src="layui/layui.js"></script>
+
+<script>
+    <!--轮播图-->
+    layui.use('carousel', function () {
+        var carousel = layui.carousel;
+        //建造实例
+        carousel.render({
+            elem: '#rotation'
+            , width: '100%' //设置容器宽度
+            , arrow: 'always', //始终显示箭头
+            height: '480px'
+        });
+    });
+
+    const app = new Vue({
+        el: "#app",
+        data: {
+            goods: [],//商品列表
+            user: "",
+            findInput: "",
+            pagination: {//分页相关模型数据
+                currentPage: 1,//当前页码
+                pageSize: 10,//每页显示的记录数
+                total: 0,//总记录数
+                messageTitle: "",
+                employeeName: ""
+            }
+        },
+        created() {
+            this.queryGoodsScroll();
+            this.queryUser();
+        },
+        methods: {
+            queryGoodsScroll() {
+                axios.get("/goods/list/" + this.pagination.currentPage + "/" + this.pagination.pageSize)
+                    .then(({data}) => {
+                        console.log(data.data)
+                        this.goods = data.data.records;
+                        this.pagination.total = data.data.total;
+                    })
+                    .catch(err => {
+                        this.$message.error(err)
+                    })
+            },
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+                this.pagination.pageSize = val;
+                this.queryGoodsScroll();
+            },
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+                this.pagination.currentPage = val;
+                this.queryGoodsScroll();
+            },
+            queryUser() {
+                //查询用户信息
+                axios.get("/user/me")
+                    .then(({data}) => {
+                        if (data.code === 200) {
+                            this.user = data.data
+                        } else {
+                            layer.msg("您未登录")
+                        }
+                    })
+            },
+            classify(type){
+               axios.get("/goods/classify/" + this.pagination.currentPage + "/" + this.pagination.pageSize + "/" + type)
+                    .then(({data}) => {
+                        console.log(data.data)
+                        this.goods = data.data.records;
+                        this.pagination.total = data.data.total;
+                    })
+            },
+            findGoods(){
+                axios.get("/goods/find/" + this.pagination.currentPage + "/" + this.pagination.pageSize + "/" + this.findInput)
+                    .then(({data}) => {
+                        console.log(data.data);
+                        this.goods = data.data.records;
+                        this.pagination.total = data.data.total;
+                    })
+            }
+        }
+    })
+
+</script>
+</html>

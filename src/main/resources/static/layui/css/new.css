@@ -1,0 +1,81 @@
+.layui-nav .layui-nav-item {
+    position: relative;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    vertical-align: middle;
+    line-height: 75px;
+}
+.layui-nav * {
+    font-size: 20px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.item {
+    left: 100px;
+    font-size: 28px;
+    width: 500px;
+}
+
+
+.my {
+    left: 500px;
+}
+
+.layui-nav-child {
+    top: 80px;
+}
+
+hr:not([size]) {
+    height: 4px;
+}
+
+.layui-elem-quote {
+    margin-bottom: 10px;
+    padding: 15px;
+    line-height: 1.5;
+    border-left: 5px solid #5fb878;
+    border-left-color: rgb(95, 184, 120);
+    border-radius: 0 2px 2px 0;
+    background-color: #fafafa;
+    margin-top: 15px;
+    margin-left: 250px;
+    margin-right: 250px;
+    height: 70px;
+    border-color: #F6CEEC;
+    font-size: 25px;
+    color: #F781BE;
+}
+
+.layui-card-header {
+    position: relative;
+    height: 230px;
+    line-height: 42px;
+    border: 1px solid;
+    border-top-color: currentcolor;
+    border-right-color: currentcolor;
+    border-bottom-color: currentcolor;
+    border-left-color: currentcolor;
+    color: #333;
+    border-radius: 2px 2px 0 0;
+    font-size: 14px;
+    left: 250px;
+    border-color: #D8D8D8;
+    width: 200px;
+}
+
+.layui-card-body {
+    position: relative;
+    padding: 10px;
+    line-height: 24px;
+    left: 250px;
+    text-align: center;
+    width: 200px;
+}
+
+.mybody {
+    color: #FF0040;
+}

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>购物车</title>
+    <link rel="stylesheet" href="css/cart.css">
+</head>
+<body>
+<div id="app">
+    <!--导航栏-->
+    <ul class="layui-nav layui-bg-cyan">
+        <li class="layui-nav-item" style=""><a href="#">校园二手商品交易平台</a></li>
+        <li class="layui-nav-item"><a href="shop.html">首页</a></li>
+        <li class="layui-nav-item"><a href="#">购物车</a></li>
+        <li class="layui-nav-item"><a href="info.html">个人主页</a></li>
+        <li class="layui-nav-item"><a href="publish.html">发布闲置</a></li>
+    </ul>
+
+    <div id="info">
+        <ul class="layui-nav layui-nav-tree" lay-filter="test" id="broadside">
+            <li class="icon layui-nav-child-c"><img :src="user.url"/></li>
+            <li class="layui-nav-child-c"><p>{{user.name}}</p></li>
+            <li class="layui-nav-item layui-nav-child-c"><a href="info.html">我发布的</a></li>
+            <li class="layui-nav-item layui-nav-child-c"><a href="sell.html">我卖出的</a></li>
+            <li class="layui-nav-item layui-nav-child-c"><a href="#">购物车</a></li>
+            <li class="layui-nav-item layui-nav-child-c"><a href="order.html">我的订单</a></li>
+            <li class="layui-nav-item layui-nav-child-c"><a href="my.html">个人信息</a></li>
+            <li class="layui-nav-item layui-nav-child-c"><a href="#" @click="quite()">退出登录</a></li>
+        </ul>
+
+        <div id="my_cart">
+            <div class="my_good" v-for="g in goods">
+                <div class="good_img"><img :src="g.url"></div>
+                <div class="good_name">{{g.goodName}}</div>
+                <br>
+                <div class="good_price">￥{{g.price}}</div>
+                <div class="good_button">
+                    <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" id="buy"
+                            @click="buyGood(g)">购买
+                    </button>
+                    <br>
+                    <button type="button" class="layui-btn layui-btn-radius layui-btn-danger" id="out"
+                            @click="deleteGood(g)">移出购物车
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="js/vue.js" rel="script" type="text/javascript"></script>
+
+<script src="plugins/elementui/index.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+
+<script src="js/axios-0.18.0.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="layer/layer.js"></script>
+<!-- common.js -->
+<script type="text/javascript" src="js/common.js"></script>
+<!-- jquery-validator -->
+<script type="text/javascript" src="jquery-validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="jquery-validation/localization/messages_zh.min.js"></script>
+<!-- bootstrap -->
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css"/>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.bundle.js"></script>
+<!-- layui-->
+<link rel="stylesheet" href="layui/css/layui.css">
+<link rel="stylesheet" href="layui/css/new.css">
+<script src="layui/layui.js"></script>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            user: "",
+            goods: []
+        },
+        created() {
+            this.queryUser();
+            this.queryCart();
+        },
+        methods: {
+            queryUser() {
+                //查询用户信息
+                axios.get("/user/me")
+                    .then(({data}) => {
+                        if (data.code === 200) {
+                            this.user = data.data
+                        } else {
+                            layer.msg("您未登录")
+                        }
+                    })
+            },
+            queryCart() {
+                axios.get("/cart/me")
+                    .then(({data}) => {
+                        if (data.code === 200) {
+                            this.goods = data.data;
+                        } else {
+                            layer.msg("您还没有喜欢的商品，快去选购吧");
+                        }
+                    })
+            },
+            deleteGood(g) {
+                axios.delete("/cart/delete/" + g.id)
+                    .then(({data}) => {
+                        if (data.code === 200) {
+                            layer.msg("删除成功");
+                            this.queryCart();
+                        } else {
+                            layer.msg("商品不存在，请重试");
+                        }
+                    })
+            },
+            buyGood(g) {
+                axios.delete("/cart/buy/" + g.id)
+                    .then(({data}) => {
+                        if (data.code === 200) {
+                            layer.msg("购买成功");
+                            this.queryCart();
+                        } else {
+                            layer.msg("商品不存在，请重试");
+                        }
+                    })
+            },
+            quite() {
+                //退出登录
+                axios.get("/user/quit")
+                    .then(({data}) => {
+                        if (data.code === 200) {
+                            layer.msg("退出登录成功！");
+                            window.location.href = "/"
+                        }
+                    })
+            }
+        }
+    })
+</script>
+</html>

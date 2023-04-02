@@ -1,0 +1,76 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.bg{
+    position: relative;
+    width: 100%;
+    height: 800px;
+    background: url("../images/register.jpg");
+    background-size: cover;
+}
+
+.registerDiv{
+    position: absolute;
+    width: 37%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 380px;
+    top: 200px;
+    right: 50px;
+    background-color: rgba(75, 81, 95, 0.5);
+    border-radius: 5px;
+    color: white;
+}
+
+h1{
+    text-align: center;
+    color: white;
+}
+
+p {
+    margin-top: 30px;
+    margin-left: 20px;
+    color: white;
+}
+
+.input{
+    width: 200px;
+    margin-left: 15px;
+    border-radius: 5px;
+    border-style: hidden;
+    height: 30px;
+    background-color: rgba(216, 191, 216, 0.5);
+    outline: none;
+    color: white;
+    padding-left: 10px;
+}
+
+#checkbox{
+    margin-top: 15px;
+    margin-left: 15px;
+    padding-left: 6px;
+}
+
+#registerButton{
+    border-color: cornsilk;
+    background-color: rgba(100, 149, 237, .7);
+    color: aliceblue;
+    border-style: hidden;
+    border-radius: 5px;
+    width: 100px;
+    height: 31px;
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+a{
+    color: white;
+}
+
+/*#errorMsg {*/
+/*    text-align: center;*/
+/*    color: red;*/
+/*}*/

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>我买到的</title>
+</head>
+<link rel="stylesheet" href="css/order.css">
+<body>
+<div id="app">
+    <!--导航栏-->
+    <ul class="layui-nav layui-bg-cyan">
+        <li class="layui-nav-item" style=""><a href="#">校园二手商品交易平台</a></li>
+        <li class="layui-nav-item"><a href="shop.html">首页</a></li>
+        <li class="layui-nav-item"><a href="cart.html">购物车</a></li>
+        <li class="layui-nav-item"><a href="info.html">个人主页</a></li>
+        <li class="layui-nav-item"><a href="publish.html">发布闲置</a></li>
+    </ul>
+
+    <div id="info">
+        <ul class="layui-nav layui-nav-tree" lay-filter="test" id="broadside">
+            <li class="icon layui-nav-child-c"><img :src="user.url"/></li>
+            <li class="layui-nav-child-c"><p>{{user.name}}</p></li>
+            <li class="layui-nav-item layui-nav-child-c"><a href="info.html">我发布的</a></li>
+            <li class="layui-nav-item layui-nav-child-c"><a href="sell.html">我卖出的</a></li>
+            <li class="layui-nav-item layui-nav-child-c"><a href="cart.html">购物车</a></li>
+            <li class="layui-nav-item layui-nav-child-c"><a href="#">我的订单</a></li>
+            <li class="layui-nav-item layui-nav-child-c"><a href="my.html">个人信息</a></li>
+            <li class="layui-nav-item layui-nav-child-c"><a href="#" @click="quite()">退出登录</a></li>
+        </ul>
+
+        <div id="my_orders">
+            <div class="my_order" v-for="o in orders">
+                <div class="order_img"><img :src="o.url"></div>
+                <div class="order_name">{{o.goodName}}</div>
+                <br>
+                <div class="order_price">￥{{o.totalAmount}}</div>
+                <div id="order_status">{{o.statusText}}</div>
+                <div  id="do">
+                    <button type="button" class="layui-btn layui-btn-radius layui-btn-normal">{{o.button}}</button>
+                </div>
+                <a id="order_detail" :href="'/orderDetail.html?orderId=' + o.id">详情</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="js/vue.js" rel="script" type="text/javascript"></script>
+
+<script src="plugins/elementui/index.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+
+<script src="js/axios-0.18.0.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="layer/layer.js"></script>
+<!-- common.js -->
+<script type="text/javascript" src="js/common.js"></script>
+<!-- jquery-validator -->
+<script type="text/javascript" src="jquery-validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="jquery-validation/localization/messages_zh.min.js"></script>
+<!-- bootstrap -->
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css"/>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.bundle.js"></script>
+<!-- layui-->
+<link rel="stylesheet" href="layui/css/layui.css">
+<link rel="stylesheet" href="layui/css/new.css">
+<script src="layui/layui.js"></script>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data: {
+            user: "",
+            orders: []
+        },
+        created() {
+            this.queryUser();
+            this.queryOrders();
+        },
+        methods: {
+            queryUser() {
+                //查询用户信息
+                axios.get("/user/me")
+                    .then(({data}) => {
+                        if (data.code === 200) {
+                            this.user = data.data
+                        } else {
+                            layer.msg("您未登录")
+                        }
+                    })
+            },
+            queryOrders(){
+                //查询用户订单
+                axios.get("/order/my")
+                    .then(({data}) => {
+                        if (data.code === 200) {
+                            this.orders = data.data;
+                        } else {
+                            layer.msg("您还没有购买商品，快去购买吧")
+                        }
+                    })
+            },
+            quite(){
+                //退出登录
+                axios.get("/user/quit")
+                    .then(({data}) => {
+                        if (data.code === 200){
+                            layer.msg("退出登录成功！");
+                            window.location.href="/"
+                        }
+                    })
+            }
+        }
+    })
+</script>
+</html>

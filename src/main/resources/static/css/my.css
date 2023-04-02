@@ -1,0 +1,81 @@
+html {
+    font-size: 12px;
+    width: 100%;
+}
+body{
+    margin: 0;
+}
+html,body,#app{
+    height: 100%;
+}
+
+#info{
+    position: relative;
+    margin-top: 20px;
+    width: 90%;
+    margin-left: 5%;
+    background-color: #eee;
+}
+
+#broadside{
+    position: absolute;
+    left: 0;
+    padding: 20px;
+}
+
+.layui-nav-item{
+    margin-top: 20px;
+}
+
+.icon{
+    width: 150px;
+    margin-bottom: 10px;
+}
+
+.icon img{
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+}
+
+.userForm{
+    position: absolute;
+    margin-left: 500px;
+    height: 800px;
+    width: 400px;
+    top: 220px;
+}
+
+.change_icon{
+    position: absolute;
+    margin-left: 600px;
+    height: 200px;
+    width: 200px;
+}
+
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 150px;
+    height: 85px;
+    text-align: center;
+    margin-top: 65px;
+}
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    display: block;
+}

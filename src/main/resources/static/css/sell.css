@@ -1,0 +1,100 @@
+html {
+    font-size: 12px;
+    width: 100%;
+}
+body{
+    margin: 0;
+}
+html,body,#app{
+    height: 100%;
+}
+
+#info{
+    position: relative;
+    margin-top: 20px;
+    width: 90%;
+    margin-left: 5%;
+    background-color: #eee;
+}
+
+#broadside{
+    position: absolute;
+    left: 0;
+    padding: 20px;
+}
+
+.layui-nav-item{
+    margin-top: 20px;
+}
+
+.icon{
+    width: 150px;
+    margin-bottom: 10px;
+}
+
+.icon img{
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+}
+
+#sell_orders{
+    position: absolute;
+    margin-left: 230px;
+    width: 70%;
+    height: 800px;
+}
+
+.sell_order{
+    position: relative;
+    margin-bottom: 20px;
+    background-color: #FFF8DC;
+    height: 150px;
+    width: 100%;
+    padding: 20px;
+}
+
+.sell_img{
+    position: absolute;
+    width: 120px;
+    height: 120px;
+}
+
+.sell_img img{
+    width: 120px;
+    height: 120px;
+}
+
+.sell_name{
+    margin-left: 135px;
+    margin-top: 20px;
+    font-size: 15px;
+    width: 100px;
+    display: inline-block;
+}
+
+.sell_price{
+    margin-left: 135px;
+    margin-top: 30px;
+    font-size: 20px;
+    color: red;
+    width: 100px;
+    display: inline-block;
+}
+
+#sell_status{
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    font-size: 18px;
+    color: #FFC125;
+    display: inline-block;
+}
+
+#order_detail{
+    position: absolute;
+    top: 100px;
+    right: 40px;
+    font-size: 15px;
+    display: inline-block;
+}

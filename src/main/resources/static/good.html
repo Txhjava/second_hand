@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <title>商品详情</title>
+</head>
+<link rel="stylesheet" href="css/details.css">
+<body>
+<div id="app">
+    <!--导航栏-->
+    <ul class="layui-nav layui-bg-cyan">
+        <li class="layui-nav-item" style=""><a href="#">校园二手商品交易平台</a></li>
+        <li class="layui-nav-item"><a href="shop.html">首页</a></li>
+        <li class="layui-nav-item"><a href="cart.html">购物车</a></li>
+        <li class="layui-nav-item"><a href="info.html">个人主页</a></li>
+        <li class="layui-nav-item"><a href="publish.html">发布闲置</a></li>
+    </ul>
+
+    <div class="detail">
+        <div class="img">
+            <img :src="g.url" alt="" width="500px" height="500px">
+        </div>
+        <div class="desc">
+            <h3>{{g.goodName}}</h3>
+            <div class="de">
+                <p>价格</p>
+                <span id="price" class="all">￥{{g.price}}</span>
+            </div>
+            <div class="de">
+                <p>卖方</p>
+                <span id="sellerName" class="all">{{g.name}}</span>
+            </div>
+            <div class="de">
+                <p>商品类型</p>
+                <span id="goodType" class="all">{{g.type}}</span>
+            </div>
+            <div class="de">
+                <p>商品描述</p>
+                <span id="description" class="all">{{g.description}}</span>
+            </div>
+            <div class="de">
+                <button type="button" class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal" id="buy" @click="buy()">购买闲置</button>
+                <button type="button" class="layui-btn layui-btn-lg layui-btn-radius" id="add" @click="addCart()">加入购物车</button>
+            </div>
+        </div>
+    </div>
+
+    <!--    评论区-->
+    <div id="good-comments">
+        <div class="comments-head">
+            <div>网友评价 <span>({{num}})</span></div>
+            <div><i class="el-icon-arrow-right"></i></div>
+        </div>
+        <div id="publish-comments">
+            <div class="user-icon">
+                <img :src="user.url" alt="">
+            </div>
+            <div class="os">
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" v-model="content1"></textarea>
+                    <label for="floatingTextarea">让我们一起讨论吧！</label>
+                </div>
+                <button type="button" class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal" id="publish-button" @click="publish()">发布评论</button>
+            </div>
+        </div>
+
+        <div class="comment-list">
+            <div class="comment-box" v-for="c in cs" :key="c.id">
+                <div class="comment-icon">
+                    <img :src="c.url" alt="">
+                </div>
+                <div class="comment-info">
+                    <div class="comment-user">{{c.name}}</div>
+                    <div style="padding: 50px 0; font-size: 14px" id="content">
+                        {{c.content}}
+                    </div>
+                    <span id="publishTime">{{c.publishTime}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="js/vue.js" rel="script" type="text/javascript"></script>
+
+<script src="plugins/elementui/index.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+
+<script src="js/axios-0.18.0.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="layer/layer.js"></script>
+<!-- common.js -->
+<script type="text/javascript" src="js/common.js"></script>
+<!-- jquery-validator -->
+<script type="text/javascript" src="jquery-validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="jquery-validation/localization/messages_zh.min.js"></script>
+<!-- bootstrap -->
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css"/>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.bundle.js"></script>
+<!-- layui-->
+<link rel="stylesheet" href="layui/css/layui.css">
+<link rel="stylesheet" href="layui/css/new.css">
+<script src="layui/layui.js"></script>
+
+<script>
+    var id = g_getQueryString("id");
+
+    const app = new Vue({
+        el: "#app",
+        data: {
+            user: "",
+            g: "",
+            cs: [],//与商品关联的评论
+            num: "", //评论的数量
+            content1: ""
+        },
+        created() {
+            this.queryUser();
+            this.queryGoodDetail();
+            this.queryComments();
+            this.queryCommentNum();
+        },
+        methods: {
+            queryUser() {
+                //查询用户信息
+                axios.get("/user/me")
+                    .then(({data}) => {
+                        if (data.code === 200) {
+                            this.user = data.data
+                        } else {
+                            layer.msg("您未登录")
+                        }
+                    })
+            },
+            queryGoodDetail() {
+                axios.get("/goods/detail/" + id)
+                    .then(({data}) => {
+                        if (data.code === 200) {
+                            this.g = data.data;
+                        } else {
+                            layer.msg("商品不存在！");
+                        }
+                    })
+            },
+            //查询商品相关评论
+            queryComments(){
+                axios.get("/comment/"+id)
+                    .then(({data}) => {
+                        if (data.code === 200){
+                            this.cs = data.data;
+                        }
+                    })
+            },
+            //计算评论的数量
+            queryCommentNum(){
+                axios.get("/comment/num/"+id)
+                    .then(({data}) => {
+                        if (data.code === 200){
+                            this.num = data.data;
+                        }
+                    })
+            },
+            publish(){
+                console.log(this.content1)
+                axios.post("/comment/save", {
+                    id: id,
+                    content: this.content1
+                }).then(() => {
+                        this.content1="";
+                        layer.msg("发布成功！");
+                        this.queryComments();
+                        this.queryCommentNum();
+                    })
+            },
+            buy(){
+                axios.get("/goods/buy/" + this.g.id)
+                    .then(({data}) => {
+                        if (data.code === 200) {
+                            layer.msg("购买成功");
+                        } else {
+                            layer.msg("商品不存在，请重试");
+                        }
+                    })
+            },
+            addCart(){
+                axios({
+                        method: "POST",
+                        url: "/cart/add",
+                        data: {
+                            id: this.g.id
+                        },
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        }
+                    }
+                ).then(({data}) => {
+                    if (data.code === 200){
+                        layer.msg("购物车添加成功");
+                    }
+                })
+            }
+        }
+    })
+
+</script>
+</html>

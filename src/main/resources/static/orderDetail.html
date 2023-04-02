@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>订单详情</title>
+</head>
+<body>
+<div id="app">
+    <!--导航栏-->
+    <ul class="layui-nav layui-bg-cyan">
+        <li class="layui-nav-item" style=""><a href="#">校园二手商品交易平台</a></li>
+        <li class="layui-nav-item"><a href="shop.html">首页</a></li>
+        <li class="layui-nav-item"><a href="cart.html">购物车</a></li>
+        <li class="layui-nav-item"><a href="info.html">个人主页</a></li>
+        <li class="layui-nav-item"><a href="publish.html">发布闲置</a></li>
+    </ul>
+
+    <div class="panel panel-default">
+        <table class="table" id="order">
+            <tr>
+                <td>商品名称</td>
+                <td id="goodsName" colspan="3">{{order.goodName}}</td>
+            </tr>
+            <tr>
+                <td>商品图片</td>
+                <td colspan="2"><img id="goodsImg" width="200"
+                                     height="200" :src="order.url"/></td>
+            </tr>
+            <tr>
+                <td>订单价格</td>
+                <td colspan="2" id="goodsPrice">{{order.totalAmount}}</td>
+            </tr>
+            <tr>
+                <td>下单时间</td>
+                <td id="createDate" colspan="2">{{order.orderTime}}</td>
+            </tr>
+            <tr>
+                <td>订单状态</td>
+                <td id="status">{{order.statusText}}</td>
+                <td id="button">
+                    <button class="btn btn-primary btn-block" type="submit"
+                            id="payButton" @click="doing()">{{order.button}}
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>收货人</td>
+                <td colspan="1" id="nickname">{{order.buyerName}}</td>
+                <td colspan="1" id="userId" style="display: none">{{order.buyerId}}</td>
+            </tr>
+            <tr>
+                <td>收货地址</td>
+                <td colspan="2">{{order.address}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="js/vue.js" rel="script" type="text/javascript"></script>
+
+<script src="plugins/elementui/index.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+
+<script src="js/axios-0.18.0.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="layer/layer.js"></script>
+<!-- common.js -->
+<script type="text/javascript" src="js/common.js"></script>
+<!-- jquery-validator -->
+<script type="text/javascript" src="jquery-validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="jquery-validation/localization/messages_zh.min.js"></script>
+<!-- bootstrap -->
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css"/>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.bundle.js"></script>
+<!-- layui-->
+<link rel="stylesheet" href="layui/css/layui.css">
+<link rel="stylesheet" href="layui/css/new.css">
+<script src="layui/layui.js"></script>
+
+<script>
+    var id = g_getQueryString("orderId");
+    // var button1 = document.getElementById("button");
+    const app = new Vue({
+        el: "#app",
+        data: {
+            user: "",
+            order: ""
+        },
+        created() {
+            this.queryOrder();
+        },
+        methods: {
+            queryOrder(){
+                axios.get("/order/detail/" + id)
+                    .then(({data}) => {
+                        if (data.code === 200){
+                            this.order = data.data;
+                            if (data.data.isButton === false){
+                                document.getElementById("button").style.display = "none";
+                            }
+                        }
+                    })
+            },
+            doing(){
+                switch (this.order.status){
+                    case 0:
+                        this.updateStat();
+                        layer.msg("购买成功");
+                        break;
+                    case 1:
+                        this.updateStat();
+                        layer.msg("催促成功");
+                        break;
+                    case 2:
+                        this.updateStat();
+                        layer.msg("确认收货成功");
+                        break;
+                    case 3:
+                        this.updateStat();
+                        window.location.href="/good.html?id=" + this.order.goodsId;
+                        layer.msg("跳转成功，请评价");
+                        break;
+                    case 4:
+                        this.updateStat();
+                        window.location.href="/good.html?id=" + this.order.goodsId;
+                        layer.msg("跳转成功，请评价");
+                        break;
+                    case 5:
+                        window.location.href="/good.html?id=" + this.order.goodsId;
+                        layer.msg("跳转成功，请评价");
+                        break;
+                }
+            },
+            updateStat(){
+                axios({
+                    method: "POST",
+                    url: "/order/updateStatus",
+                    data: {
+                        status: this.order.status + 1,
+                        id: id
+                    },
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                }).then(({data}) => {
+                    this.order = data.data;
+                });
+            }
+        }
+    })
+</script>
+</html>

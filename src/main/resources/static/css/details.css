@@ -1,0 +1,160 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.detail {
+    position: relative;
+    width: 80%;
+    background-color: #eee;
+    margin-left: 5%;
+    height: 550px;
+    margin-top: 30px;
+}
+
+.img {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    margin-top: 50px;
+    margin-left: 20px;
+}
+
+.desc {
+    position: absolute;
+    margin-left: 550px;
+    margin-top: 50px;
+}
+
+p{
+    display: inline-block;
+    font-size: 20px;
+    font-family: 宋体;
+}
+
+h3{
+    font-family: 微软雅黑;
+}
+
+#price{
+    margin-left: 50px;
+    color: red;
+    font-family: 微软雅黑;
+    font-size: 30px;
+}
+
+#sellerName{
+    margin-left: 50px;
+    font-size: 20px;
+}
+
+#goodType{
+    margin-left: 10px;
+    font-size: 20px;
+}
+
+#description{
+    margin-left: 10px;
+    font-size: 18px;
+}
+
+.de{
+    margin-top: 50px;
+}
+
+#buy{
+    margin-left: 50px;
+}
+
+#add{
+    margin-left: 150px;
+}
+
+#good-comments{
+    position: absolute;
+    padding: 20px;
+    margin-left: 5%;
+    background-color: #eee;
+    width: 80%;
+}
+
+.comments-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.comments-head span {
+    font-size: 12px;
+    font-weight: normal;
+    color: #82848a;
+}
+
+.comment-list {
+    margin-top: 15px;
+}
+.comment-box {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+.comment-icon {
+    width: 55px;
+}
+.comment-icon img{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+.comment-info {
+    width: 80%;
+    flex-grow: 1;
+}
+.comment-user {
+    font-size: 14px;
+}
+
+#content{
+    display: inline;
+}
+
+#publishTime{
+    margin-left: 200px;
+}
+
+.user-icon{
+    width: 55px;
+}
+
+.user-icon img{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.form-floating{
+    width: 500px;
+    height: 40px;
+    display: inline-block;
+}
+
+#publish-comments{
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.os{
+    width: 80%;
+    flex-grow: 1;
+}
+
+#publish-button{
+    margin-left: 50px;
+    display: inline-block;
+}
+
+
+
+

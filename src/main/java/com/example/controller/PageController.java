@@ -12,6 +12,11 @@ public class PageController {
         return "login";
     }
 
+    @RequestMapping("/login")
+    public String adminLogin(){
+        return "adminLogin";
+    }
+
     @RequestMapping("/register")
     public String register(){
         return "register";

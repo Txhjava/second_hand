@@ -16,7 +16,7 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
 
     private StringRedisTemplate stringRedisTemplate;
 
-    public RefreshTokenInterceptor(StringRedisTemplate stringRedisTemplate){
+    public RefreshTokenInterceptor(StringRedisTemplate stringRedisTemplate) {
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
@@ -26,23 +26,38 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //获取请求头中的token
         String token = request.getHeader("authorization");
-        if (StrUtil.isBlank(token)){
+        String uuid = request.getHeader("admin");
+        if (StrUtil.isBlank(token) && StrUtil.isBlank(uuid)) {
             //当token为空就说明用户没有登陆，直接放行就好
             return true;
+        } else if (!StrUtil.isBlank(token)) {
+            //基于token获取redis中的用户
+            Map<Object, Object> userMap = stringRedisTemplate.
+                    opsForHash().entries(RedisConstants.LOGIN_USER_KEY + token);
+            if (userMap.isEmpty()) {
+                return true;
+            }
+            //将获取到的hash对象转为userDTO对象
+            UserDTO userDTO = BeanUtil.fillBeanWithMap(userMap, new UserDTO(), false);
+            //将UserDTO存在ThreadLocal中
+            UserContext.setUser(userDTO);
+            //刷新token的有效期
+            stringRedisTemplate.expire(RedisConstants.LOGIN_USER_KEY + token,
+                    RedisConstants.CACHE_SHOP_TTL, TimeUnit.MINUTES);
+        } else if (!StrUtil.isBlank(uuid)){
+            Map<Object, Object> adminMap = stringRedisTemplate.
+                    opsForHash().entries(RedisConstants.LOGIN_ADMIN_KEY + token);
+            if (adminMap.isEmpty()) {
+                return true;
+            }
+            //将获取到的hash对象转为userDTO对象
+            UserDTO userDTO = BeanUtil.fillBeanWithMap(adminMap, new UserDTO(), false);
+            //将UserDTO存在ThreadLocal中
+            UserContext.setUser(userDTO);
+            //刷新token的有效期
+            stringRedisTemplate.expire(RedisConstants.LOGIN_ADMIN_KEY + token,
+                    RedisConstants.CACHE_SHOP_TTL, TimeUnit.MINUTES);
         }
-        //基于token获取redis中的用户
-        Map<Object, Object> userMap = stringRedisTemplate.
-                opsForHash().entries(RedisConstants.LOGIN_USER_KEY + token);
-        if (userMap.isEmpty()) {
-            return true;
-        }
-        //将获取到的hash对象转为userDTO对象
-        UserDTO userDTO = BeanUtil.fillBeanWithMap(userMap, new UserDTO(), false);
-        //将UserDTO存在ThreadLocal中
-        UserContext.setUser(userDTO);
-        //刷新token的有效期
-        stringRedisTemplate.expire(RedisConstants.LOGIN_USER_KEY + token,
-                RedisConstants.CACHE_SHOP_TTL, TimeUnit.MINUTES);
         return true;
     }
 

@@ -6,9 +6,11 @@ axios.defaults.timeout = 2000;
 
 // request拦截器，将用户token放入头中
 let token = sessionStorage.getItem("token");
+let uuid = sessionStorage.getItem("uuid");
 axios.interceptors.request.use(
     config => {
         if(token) config.headers['authorization'] = token
+        if(uuid) config.headers['admin'] = uuid
         return config
     },
     error => {

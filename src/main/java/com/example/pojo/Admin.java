@@ -29,7 +29,7 @@ public class Admin implements Serializable {
     /**
      * 账号
      */
-    private Long account;
+    private String account;
 
     /**
      * 密码
@@ -46,5 +46,12 @@ public class Admin implements Serializable {
      */
     private String name;
 
+    /**
+    * @author txh
+    * @Description 头像
+    * @Param
+    * @return
+    **/
+    private String url;
 
 }

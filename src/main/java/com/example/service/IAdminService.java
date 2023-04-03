@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.dto.Result;
 import com.example.pojo.Admin;
 
 /**
@@ -13,4 +14,5 @@ import com.example.pojo.Admin;
  */
 public interface IAdminService extends IService<Admin> {
 
+    Result adminLogin(Admin admin);
 }
